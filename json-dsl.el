@@ -1,10 +1,8 @@
 ;;; json-dsl.el --- Simple DSL for JSON -*- lexical-binding: t; -*-
 
 ;; Author: Alphazino
-;; Maintainer: Alphazino
 ;; Version: 0.1
 ;; URL: https://github.com/Alphazino/json-dsl
-;; Repository: https://github.com/Alphazino/json-dsl.git
 
 ;;; Commentary:
 
