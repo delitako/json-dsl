@@ -1,7 +1,7 @@
 #+title: json-dsl
 
 * Description
-This package abstracts over the built-in =json-encode= to use a more strict format and avoid some pitfalls. The provided =json-dsl= function will return the encoded data as a string. *WARNING: As of now, this package is largely untested, YMMV.*
+This package abstracts over the built-in =json-encode= to use a more strict format and avoid some pitfalls. The provided =json-dsl= and =json-dsl-pretty= functions will return the encoded data as a string. *WARNING: As of now, this package is largely untested, YMMV.*
 
 * Usage
 #+begin_src emacs-lisp
