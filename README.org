@@ -1,0 +1,55 @@
+#+title: json-dsl
+
+* Description
+This package abstracts over the built-in =json-encode= to use a more strict format and avoid some pitfalls. The provided =json-dsl= function will return the encoded data as a string. *WARNING: As of now, this package is largely untested, YMMV.*
+
+* Usage
+#+begin_src emacs-lisp
+  ;; json-dsl takes these two arguments.
+  (let ((pretty-print nil)
+        (json-data '(arr 1 2 3)))
+    (json-dsl pretty-print json-data))
+
+#+end_src
+
+#+RESULTS:
+: [1,2,3]
+
+* DSL Format
+** Strings
+JSON Strings are represented with either a string, symbol, or keyword.
+#+begin_src emacs-lisp
+  (json-dsl nil "string") ;; "string"
+  (json-dsl nil symbol)   ;; "symbol"
+  (json-dsl nil :keyword) ;; "keyword"
+#+end_src
+
+** True, False, and Null
+The symbols true, false, and null are used to represent their corresponding JSON values.
+#+begin_src emacs-lisp
+  (json-dsl nil 'true)  ;; true
+  (json-dsl nil 'false) ;; false
+  (json-dsl nil 'null)  ;; null
+#+end_src
+Convert to a string or keyword first if encoding symbols from an unknown source so that they do not become one of these instead of a string.
+
+** Numbers
+Numbers are represented with emacs lisp numbers and will be formatted according to =json-encode=.
+#+begin_src emacs-lisp
+  (json-dsl nil 1) ;; 1
+  (json-dsl nil 12.5) ;; 12.5
+#+end_src
+
+** Arrays
+Arrays are represented by lists where the first item is the symbol =arr= and the remaining items are the elements in the array. No other format is accepted
+#+begin_src emacs-lisp
+  (json-dsl nil '(arr a b c 1 2 3)) ;; ["a","b","c",1,2,3]
+  (json-dsl nil '(arr))             ;; []
+#+end_src
+
+** Objects
+Objects are represented by lists that start with the symbol =obj= and contain alternating keys and values for the rest of the list. Keys may be strings, symbols, or keywords.
+#+begin_src emacs-lisp
+  (json-dsl nil '(obj a 1 :b 2 "c" 3)) ;; {"a":1,"b":2,"c":3}
+  (json-dsl nil '(obj))                ;; {}
+#+end_src

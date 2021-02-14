@@ -22,11 +22,18 @@
 (defconst json-dsl--empty-obj (make-hash-table :size 1))
 (defconst json-dsl--empty-arr (make-vector 0 nil))
 
+(defun json-dsl--convert-key (key)
+  "Convert a key to a string to avoid special cases."
+  (pcase key
+    ((pred keywordp) (substring (symbol-name key) 1))
+    ((pred symbolp) (symbol-name key))
+    ((pred stringp) key)
+    (_ (error "Invaid key: %s" key))))
+
 (defun json-dsl--convert-pair (pair)
   "Convert a single list (PAIR) to a dotted pair."
   (pcase pair
-    ((and `(,key ,value) (guard (or (symbolp key) (stringp key))))
-     (cons key (json-dsl--convert-data value)))
+    (`(,key ,value) (cons (json-dsl--convert-key key) (json-dsl--convert-data value)))
     (_ (error "Invalid key-value pair: %s" pair))))
 
 (defun json-dsl--convert-obj (obj)
@@ -59,7 +66,23 @@
 
 ;;;###autoload
 (defun json-dsl (pretty-print data)
-  "Generate a json string from DATA. Will pretty print if PRETTY-PRINT in non-nil."
+  "Generate a json string from DATA. Will pretty print if PRETTY-PRINT is non-nil.
+
+JSON true, false, and null are represented with symbols of the same name.
+  If you are encoding symbols from an unknown source, convert them to strings.
+
+Keywords will be encoded as strings with the colon removed.
+
+All other symbols will be encoded as strings as is.
+
+Numbers will be passed directly to json-encode and formatted appropriately.
+
+Arrays must be formatted as lists like (arr val1 val2 val3 ...).
+  Vectors or lists without arr as the first value will not work.
+
+Objects must be formatted like (obj key1 val1 key2 val2 ...).
+  Start with obj and then alternate between keys and values.
+  Keys may be strings, symbols, or keywords"
   (let ((json-encoding-pretty-print pretty-print))
     (json-encode (json-dsl--convert-data data))))
 
