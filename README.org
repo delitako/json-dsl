@@ -5,11 +5,14 @@ This package abstracts over the built-in =json-encode= to use a more strict form
 
 * Usage
 #+begin_src emacs-lisp
-  ;; json-dsl takes these two arguments.
-  (let ((pretty-print nil)
-        (json-data '(arr 1 2 3)))
-    (json-dsl pretty-print json-data))
+  ;; Signatures
+  '(json-dsl data optional-pretty-print)
+  '(json-dsl-pretty data)
 
+  ;; Examples
+  (json-dsl '(arr 1 2 3)) ;; [1,2,3]
+  (json-dsl-pretty "pretty print me") ;; "pretty print me"
+  (json-dsl "also printy prints" t) ;; "also pretty prints"
 #+end_src
 
 #+RESULTS:
@@ -19,37 +22,37 @@ This package abstracts over the built-in =json-encode= to use a more strict form
 ** Strings
 JSON Strings are represented with either a string, symbol, or keyword.
 #+begin_src emacs-lisp
-  (json-dsl nil "string") ;; "string"
-  (json-dsl nil symbol)   ;; "symbol"
-  (json-dsl nil :keyword) ;; "keyword"
+  (json-dsl "string") ;; "string"
+  (json-dsl symbol)   ;; "symbol"
+  (json-dsl :keyword) ;; "keyword"
 #+end_src
 
 ** True, False, and Null
 The symbols true, false, and null are used to represent their corresponding JSON values.
 #+begin_src emacs-lisp
-  (json-dsl nil 'true)  ;; true
-  (json-dsl nil 'false) ;; false
-  (json-dsl nil 'null)  ;; null
+  (json-dsl 'true)  ;; true
+  (json-dsl 'false) ;; false
+  (json-dsl 'null)  ;; null
 #+end_src
 Convert to a string or keyword first if encoding symbols from an unknown source so that they do not become one of these instead of a string.
 
 ** Numbers
 Numbers are represented with emacs lisp numbers and will be formatted according to =json-encode=.
 #+begin_src emacs-lisp
-  (json-dsl nil 1) ;; 1
-  (json-dsl nil 12.5) ;; 12.5
+  (json-dsl 1) ;; 1
+  (json-dsl 12.5) ;; 12.5
 #+end_src
 
 ** Arrays
 Arrays are represented by lists where the first item is the symbol =arr= and the remaining items are the elements in the array. No other format is accepted
 #+begin_src emacs-lisp
-  (json-dsl nil '(arr a b c 1 2 3)) ;; ["a","b","c",1,2,3]
-  (json-dsl nil '(arr))             ;; []
+  (json-dsl '(arr a b c 1 2 3)) ;; ["a","b","c",1,2,3]
+  (json-dsl '(arr))             ;; []
 #+end_src
 
 ** Objects
 Objects are represented by lists that start with the symbol =obj= and contain alternating keys and values for the rest of the list. Keys may be strings, symbols, or keywords.
 #+begin_src emacs-lisp
-  (json-dsl nil '(obj a 1 :b 2 "c" 3)) ;; {"a":1,"b":2,"c":3}
-  (json-dsl nil '(obj))                ;; {}
+  (json-dsl '(obj a 1 :b 2 "c" 3)) ;; {"a":1,"b":2,"c":3}
+  (json-dsl '(obj))                ;; {}
 #+end_src

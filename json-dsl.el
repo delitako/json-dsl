@@ -63,8 +63,8 @@
     (_ (error "Invalid json-dsl value: %s" data))))
 
 ;;;###autoload
-(defun json-dsl (pretty-print data)
-  "Generate a json string from DATA. Will pretty print if PRETTY-PRINT is non-nil.
+(defun json-dsl (data &optional pretty-print)
+  "Generate a JSON string from DATA. It will pretty print if PRETTY-PRINT is non-nil.
 
 JSON true, false, and null are represented with symbols of the same name.
   If you are encoding symbols from an unknown source, convert them to strings.
@@ -83,6 +83,11 @@ Objects must be formatted like (obj key1 val1 key2 val2 ...).
   Keys may be strings, symbols, or keywords"
   (let ((json-encoding-pretty-print pretty-print))
     (json-encode (json-dsl--convert-data data))))
+
+;;;###autoload
+(defun json-dsl-pretty (data)
+  "Same as json-dsl but always pretty prints DATA."
+  (json-dsl data t))
 
 (provide 'json-dsl)
 
