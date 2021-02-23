@@ -39,7 +39,7 @@ Convert to a string or keyword first if encoding symbols from an unknown source 
 ** Numbers
 Numbers are represented with emacs lisp numbers and will be formatted according to =json-encode=.
 #+begin_src emacs-lisp
-  (json-dsl 1) ;; 1
+  (json-dsl 1)    ;; 1
   (json-dsl 12.5) ;; 12.5
 #+end_src
 
